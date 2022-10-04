@@ -13,7 +13,7 @@ const userSchema = new Schema(
             type: String,
             unique: true,
             required: true,
-            // valid
+            match: 
         },
 
         thoughts: {
