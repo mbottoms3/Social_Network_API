@@ -20,20 +20,30 @@ const thoughtSchema = new Schema(
             required: true,
         },
 
-        reactions: {
+        reactions: [reactionSchema]
             // array of nested docs in reactionSchema
-        }
+        
 
+    },
 
-
-
+    {
+        toJSON: {
+            getters: true,
+            virtuals: true,
+        },
+        id: false,
     }
 )
+
+thoughtSchema.virtual('reactionCount').get(() => {
+    return this.reactions.length;
+});
 
 const reactionSchema = new Schema(
     {
         reactionId: {
-
+            type: Schema.Types.ObjectId,
+            default: () => new Types.ObjectId(),
         },
 
         reactionBody: {
@@ -50,7 +60,18 @@ const reactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            // getter method to format timestamp query
         }
+    },
+
+    {
+        toJSON: {
+            // getter method to format timestamp query
+            getters: true,
+        },
+        id: false,
     }
 )
+
+const Thought = model('thought', thoughtSchema);
+
+module.exports = { Thought, reactionSchema }
