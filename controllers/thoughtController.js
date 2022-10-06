@@ -2,45 +2,44 @@ const { Thought } = require('../models');
 
 module.exports = {
     // GET all
-    async getThoughts(req, res) {
-        try {
-            const thoughtData = await Thought.find();
-            if (!thoughtData) {
-                res.status(404).json({ message: 'Thought not found' });
-                return;
-            }
-            res.status(200).json(thoughtData);
-    } catch (err) {
-        res.status(500).json(err)
-    }
-},
+    getThoughts(req, res) {
+        Thought.find()
+            .then((thoughts) => res.json(thoughts));
+    },
 
     // GET by id
-    async getThought(req, res) {
-        try {
-            const thoughtData = await Thought.findById(req.params.thoughtId);
-            if (!thoughtData) {
-                res.status(404).json({ message: 'Thought not found' });
-                return;
-            }
-            res.status(200).json(thoughtData);
-        } catch (err) {
-            res.status(500).json(err)
-        }
+    getThought(req, res) {
+        Thought.findOne({ _id: req.params.thoughtId })
+            // select method?
+            .then((thought) => {
+                !thought 
+                    ? res.status(404).json({ message: 'No thought with that Id' })
+                    : res.json(thought)
+            })
+            .catch((err) => res.status(500).json(err));
     },
 
     // POST new
-    async updateThought(req, res) {
-        try {
-            const thoughtData = await Thought.findByIdAndUpdate(req.params.thoughtId, { $set: req.body });
-            if (!thoughtData) {
-
-            }
-        }
-    }
+    createThought(req, res) {
+        Thought.create(req.body)
+            .then((thought) => res.json(thought))
+            .catch((err) => {
+                console.log(err); 
+                return res.status(500).json(err)
+            });  
+    },
 
     // PUT to update
 
     // DELETE by id
-
-}
+    deleteThought(req, res) {
+        Thought.findOneAndDelete({ _id: req.params.thoughtId })
+            .then((thought) =>
+            !thought 
+                ? res.status(404).json({ message: 'No thought with that Id' })
+                : Thought.
+                )
+            .then(())
+            .catch((err) => res.status(500).json(err));
+    }
+};
