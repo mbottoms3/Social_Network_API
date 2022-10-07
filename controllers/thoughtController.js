@@ -29,7 +29,9 @@ module.exports = {
   },
 
   // PUT to update
-  updateThought(req, res) {},
+  updateThought(req, res) {
+    Thought.findOneAndUpdate({});
+  },
 
   // DELETE by id
   deleteThought(req, res) {
